@@ -65,11 +65,10 @@ class BirdsData:
 
 
 
-# print(BirdsData('ptichki').get_sound_label('comcuc', '25627'))
-# print(BirdsData('ptichki').compute_agreement('comcuc'))
-# print(BirdsData('ptichki').compute_agreement('cowpig1'))
-# print(BirdsData('ptichki').compute_agreement('eucdov'))
-# print(BirdsData('ptichki').compute_agreement('eueowl1'))
-# print(BirdsData('ptichki').compute_agreement('grswoo'))
-# print(BirdsData('ptichki').compute_agreement('tawowl1'))
-print(((BirdsData('ptichki').compute_feature_correlations_for_species('comcuc'))).shape)
+print(BirdsData('ptichki').get_sound_label('comcuc', '25627'))
+print(BirdsData('ptichki').compute_agreement('comcuc'))
+print(BirdsData('ptichki').compute_agreement('cowpig1'))
+print(BirdsData('ptichki').compute_agreement('eucdov'))
+print(BirdsData('ptichki').compute_agreement('eueowl1'))
+print(BirdsData('ptichki').compute_agreement('grswoo'))
+print(BirdsData('ptichki').compute_agreement('tawowl1'))
