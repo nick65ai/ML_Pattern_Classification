@@ -20,7 +20,7 @@ class BirdsData:
                 label = np.load(f'{file_path}.labels.npy')
                 return np.array(data), np.array(label)
 
-    # potential function to complete "annotators agreement" part. Returns general agreement, positive agreement (how
+    # potential method to complete "annotators agreement" part. Returns general agreement, positive agreement (how
     # many annotators think positive class to be positive, negative agreement (how many annotators think "others" part
     # to be "others"
 
