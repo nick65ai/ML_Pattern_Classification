@@ -70,9 +70,4 @@ class BirdsData:
             cor_mat_list.append(np.corrcoef(np.load(file_paths[i]).T))
         return np.mean(cor_mat_list, axis=0)
 
-    def label_characteristics(self):
-        # firstly remove all 0 labels to seperate folder
-        alles = []
-
-
 
