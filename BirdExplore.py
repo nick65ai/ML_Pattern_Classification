@@ -1,3 +1,4 @@
+
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,8 +12,8 @@ class BirdsData:
 
     # simply retrieve the features and corresponding label for given sample of specified feature
     def get_sound_label(self, species, sample):
-        folder_path = f'{self.project_folder}/{species}'
-        file_list = os.listdir(f'{self.project_folder}/{species}')
+        folder_path = os.path.join(self.project_folder, species)
+        file_list = os.listdir(folder_path)
         for file in file_list:
             if file.endswith('.npy'):
                 file_path = os.path.join(folder_path, sample)
@@ -90,27 +91,24 @@ class BirdsData:
         class_counts = []
         for i in range(0, 7):
             class_counts.append(len(dataset[dataset[:, -1] == i]))
-
-        plt.figure(figsize=(10, 7))
         x = ['other', 'comcuc', 'cowpig1', 'eucdov', 'eueowl1', 'grswoo', 'tawowl1']
         y = class_counts
+        plt.figure(figsize=(10, 7))
         plt.plot(x, y)
-        plt.title('label distribution')
+        plt.title('Plot of labels distribution')
+        plt.xlabel('Species (labels)')
+        plt.ylabel('Samples')
         plt.show()
 
         return class_counts
-
-
-
-
 
     # potential method to complete "annotators agreement" part. Returns general agreement, positive agreement (how
     # many annotators think positive class to be positive, negative agreement (how many annotators think "others" part
     # to be "others"
 
     def compute_agreement(self, species):
-        folder_path = f'{self.project_folder}/{species}'
-        file_list = os.listdir(f'{self.project_folder}/{species}')
+        folder_path = os.path.join(self.project_folder, species)
+        file_list = os.listdir(folder_path)
         labels = [f for f in file_list if 'labels' in f]
         labels_paths = [os.path.join(folder_path, i) for i in labels]
         labels_ar_list = []
@@ -146,8 +144,10 @@ class BirdsData:
 
 
     def compute_feature_correlations_for_species(self, species):
-        folder_path = f'{self.project_folder}/{species}'
-        file_list = os.listdir(f'{self.project_folder}/{species}')
+        #folder_path = f'{self.project_folder}/{species}'
+        #file_list = os.listdir(f'{self.project_folder}/{species}')
+        folder_path = os.path.join(self.project_folder, species)
+        file_list = os.listdir(folder_path)
         features = [f for f in file_list if not 'labels' in f]
         cor_mat_list = []
         file_paths = [os.path.join(folder_path, i) for i in features]
@@ -170,4 +170,4 @@ class BirdsData:
 
 
 
-print(BirdsData('ptichki').labels_distribution())
+#print(BirdsData('ptichki').labels_distribution())
