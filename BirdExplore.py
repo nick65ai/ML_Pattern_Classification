@@ -20,6 +20,7 @@ class BirdsData:
                 return np.concatenate((data, label[:, 0].reshape(label.shape[0], 1)), axis=1)
 
 
+    #method to create one huge dataset
     def united_dataset(self):
         birds = [os.path.join(self.project_folder, b) for b in os.listdir(self.project_folder)]
         all_files = [os.path.join(bird, f) for bird in birds for f in os.listdir(bird)]
@@ -75,7 +76,6 @@ class BirdsData:
 
 
 
-
     # potential method to complete "annotators agreement" part. Returns general agreement, positive agreement (how
     # many annotators think positive class to be positive, negative agreement (how many annotators think "others" part
     # to be "others"
@@ -126,6 +126,9 @@ class BirdsData:
         for i in range(len(file_paths)):
             cor_mat_list.append(np.corrcoef(np.load(file_paths[i]).T))
         return np.mean(cor_mat_list, axis=0)
+
+
+
 
 
     def plot_cor_distribution(self, species, save = False):
