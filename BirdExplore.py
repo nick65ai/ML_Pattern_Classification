@@ -1,10 +1,13 @@
-
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 import re
+import pandas as pd
+import seaborn as sns
+
+
 
 class BirdsData:
     def __init__(self, project_folder):
@@ -72,18 +75,36 @@ class BirdsData:
         tawowl1_ars = np.concatenate(tawowl1_ars)
 
 
+
         all_birdiiies = np.concatenate((comcuc_ars, cowpig1_ars, eucdov_ars, eueowl1_ars, grswoo_ars, tawowl1_ars))
 
         return all_birdiiies
 
 
-    def pca(self):
-        scaler = StandardScaler()
-        dataset = BirdsData(self.project_folder).united_dataset()
-        X = dataset[:, 0:-1]
-        y = dataset[:, -1]
-        scaler.fit(X)
-        X_scaled = scaler.transform(X)
+    def get_dataframe(self):
+        dataframe = pd.DataFrame(BirdsData('ptichki').united_dataset())
+        with open('feature_names.txt', 'r') as f:
+            lines = [line.rstrip() for line in f.readlines()]
+        cols = []
+        for line in lines:
+            cols.append(line)
+        cols.append('target')
+        dataframe.columns = cols
+
+        targets = {
+            0: 'other',
+            1: 'comcuc',
+            2: 'cowpig1',
+            3: 'eucdov',
+            4: 'eueowl',
+            5: 'grswoo',
+            6: 'tawowl1'
+        }
+
+        dataframe.loc[:, 'target'] = dataframe.loc[:, 'target'].map(targets)
+
+        return dataframe
+
 
     def labels_distribution(self):
         dataset = BirdsData(self.project_folder).united_dataset()
@@ -144,8 +165,8 @@ class BirdsData:
 
 
     def compute_feature_correlations_for_species(self, species):
-        #folder_path = f'{self.project_folder}/{species}'
-        #file_list = os.listdir(f'{self.project_folder}/{species}')
+        # folder_path = f'{self.project_folder}/{species}'
+        # file_list = os.listdir(f'{self.project_folder}/{species}')
         folder_path = os.path.join(self.project_folder, species)
         file_list = os.listdir(folder_path)
         features = [f for f in file_list if not 'labels' in f]
@@ -154,8 +175,6 @@ class BirdsData:
         for i in range(len(file_paths)):
             cor_mat_list.append(np.corrcoef(np.load(file_paths[i]).T))
         return np.mean(cor_mat_list, axis=0)
-
-
 
 
 
@@ -170,4 +189,6 @@ class BirdsData:
 
 
 
-#print(BirdsData('ptichki').labels_distribution())
+
+c = BirdsData('ptichki')
+print(c.get_dataframe())
