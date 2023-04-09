@@ -245,5 +245,6 @@ class BirdsData:
 
 bird = BirdsData('ptichki')
 bird.species_call_distribution()
+print('hi')
 
 
