@@ -2,12 +2,23 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
 import re
 import pandas as pd
-import seaborn as sns
 
 
+
+def non_zero_sequences(lst):
+    result = []
+    sequence = []
+    for num in lst:
+        if num != 0:
+            sequence.append(num)
+        elif sequence:
+            result.append(sequence)
+            sequence = []
+    if sequence:
+        result.append(sequence)
+    return result
 
 class BirdsData:
     def __init__(self, project_folder):
@@ -27,6 +38,7 @@ class BirdsData:
 
     #method to create one huge dataset
     def united_dataset(self):
+
         birds = [os.path.join(self.project_folder, b) for b in os.listdir(self.project_folder)]
         all_files = [os.path.join(bird, f) for bird in birds for f in os.listdir(bird)]
         all_files = sorted([f for f in all_files if not 'labels' in f])
@@ -96,7 +108,7 @@ class BirdsData:
             1: 'comcuc',
             2: 'cowpig1',
             3: 'eucdov',
-            4: 'eueowl',
+            4: 'eueowl1',
             5: 'grswoo',
             6: 'tawowl1'
         }
@@ -187,8 +199,51 @@ class BirdsData:
         if save:
             plt.savefig(self.project_folder)
 
+    def species_calls(self, species):
+        folder_path = os.path.join(self.project_folder, species)
+        file_list = os.listdir(folder_path)
+        labels = [f for f in file_list if 'labels' in f]
+        labels_paths = [os.path.join(folder_path, i) for i in labels]
+        labels_ar_list = []
+        for i in range(len(labels_paths)):
+            labels_ar_list.append(np.load(labels_paths[i]))
+        labels_list = []
+        for i in range(len(labels_ar_list)):
+            for j in range(0, 100):
+                labels_list.append(labels_ar_list[i][j][0])
+        nonz = non_zero_sequences(labels_list)
+        for i in range(len(nonz)):
+            for j in range(len(nonz[i])):
+                nonz[i][j] = 0.2
+        for l in range(len(nonz)):
+            nonz[l] = round(sum(nonz[l]), 3)
+
+        return nonz
+
+    def species_call_distribution(self):
+        species = ['comcuc','cowpig1','eucdov','eueowl1','grswoo','tawowl1']
+        plt.figure(figsize=(12,7))
+        data = [BirdsData('ptichki').species_calls(b) for b in species]
+        plt.boxplot(data, showmeans=True)
+        plt.xticks([1, 2, 3, 4, 5, 6], species)
+        plt.ylabel('Duration of call/drumming')
+        plt.show()
+
+    def cor_feat_label(self):
+        c = BirdsData('ptichki')
+        X = c.united_dataset()[:, 0:548]
+        y = c.united_dataset()[:, -1]
+        cors = [np.corrcoef(x = X[:, i], y = y)[1,0] for i in range(548)]
+        plt.figure(figsize=(14,10))
+        plt.plot(cors)
+        plt.xlabel('features')
+        plt.ylabel('correlation with target')
+
+        plt.show()
 
 
 
-c = BirdsData('ptichki')
-print(c.get_dataframe())
+bird = BirdsData('ptichki')
+bird.species_call_distribution()
+
+
