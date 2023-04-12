@@ -245,13 +245,13 @@ class BirdsData:
         species = ['comcuc', 'cowpig1', 'eucdov',
                    'eueowl1', 'grswoo', 'tawowl1']
         plt.figure(figsize=(12, 7))
-        data = [np.mean(BirdsData('ptichki').species_calls(b)) for b in species]
+        data = [np.mean(BirdsData('ptichki').species_calls(b))
+                for b in species]
         plt.plot(species, data)
         plt.title('Average duration of drumming for each bird(sec.)')
         plt.ylabel('Duration(sec.)')
         plt.grid()
         plt.show()
-
 
     def cor_feat_label(self):
         c = BirdsData('ptichki')
@@ -264,12 +264,11 @@ class BirdsData:
         plt.ylabel('correlation with target')
         plt.title('Feature correletion rates with targets')
         idcs = np.argsort(cors)
-        feat_names = BirdsData(self.project_folder).get_dataframe().columns[0:-1]
+        feat_names = BirdsData(
+            self.project_folder).get_dataframe().columns[0:-1]
         top_10 = feat_names[idcs[538:]]
         plt.show()
         return top_10[::-1]
-
-
 
     def find_classification_distibution(self, species):
         folder_path = os.path.join(self.project_folder, species)
@@ -279,14 +278,24 @@ class BirdsData:
         labels_ar_list = []
         for i in range(len(labels_paths)):
             labels_ar_list.append(np.load(labels_paths[i]))
-        return np.array(labels_ar_list)
+        return labels_ar_list
+
+    def count_zeros_ones(self, arr_list):
+        num_of_zeros = 0
+        num_of_ones = 0
+        for arr in arr_list:
+            arr = np.array(arr)
+            num_of_zeros += np.count_nonzero(arr == 0)
+            num_of_ones += np.count_nonzero(arr >= 1)
+        return (num_of_zeros, num_of_ones)
 
 
-
-
-
-bird = BirdsData('ptichki')
-print(bird.cor_feat_label())
-
-a = [1,0,0,0,0]
-b = [1,1,1,0]
+# bird = BirdsData('ptichki')
+# # print(bird.find_classification_distibution('comcuc'))
+# test = bird.find_classification_distibution('cowpig1')
+# print(test)
+# print(bird.count_zeros_ones(test))
+# # print(bird.count_zeros_ones()
+# # print(bird.count_zeros_ones(bird.find_classification_distibution('comcuc')))
+# # # a = [1,0,0,0,0]
+# # # b = [1,1,1,0]
