@@ -139,7 +139,7 @@ class BirdsData:
         y = class_counts
         plt.figure(figsize=(10, 7))
         plt.plot(x, y)
-        plt.title('Plot of labels distribution')
+        plt.title('Distribution of bird species')
         plt.xlabel('Species (labels)')
         plt.ylabel('Samples')
         plt.show()
