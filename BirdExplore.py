@@ -237,8 +237,21 @@ class BirdsData:
         data = [BirdsData('ptichki').species_calls(b) for b in species]
         plt.boxplot(data, showmeans=True)
         plt.xticks([1, 2, 3, 4, 5, 6], species)
-        plt.ylabel('Duration of call/drumming')
+        plt.ylabel('Duration of call/drumming(sec.)')
+        plt.title('Distribution of duration of call/drumming for each species')
         plt.show()
+
+    def plot_duration_means(self):
+        species = ['comcuc', 'cowpig1', 'eucdov',
+                   'eueowl1', 'grswoo', 'tawowl1']
+        plt.figure(figsize=(12, 7))
+        data = [np.mean(BirdsData('ptichki').species_calls(b)) for b in species]
+        plt.plot(species, data)
+        plt.title('Average duration of drumming for each bird(sec.)')
+        plt.ylabel('Duration(sec.)')
+        plt.grid()
+        plt.show()
+
 
     def cor_feat_label(self):
         c = BirdsData('ptichki')
@@ -249,8 +262,14 @@ class BirdsData:
         plt.plot(cors)
         plt.xlabel('features')
         plt.ylabel('correlation with target')
-
+        plt.title('Feature correletion rates with targets')
+        idcs = np.argsort(cors)
+        feat_names = BirdsData(self.project_folder).get_dataframe().columns[0:-1]
+        top_10 = feat_names[idcs[538:]]
         plt.show()
+        return top_10[::-1]
+
+
 
     def find_classification_distibution(self, species):
         folder_path = os.path.join(self.project_folder, species)
@@ -263,6 +282,11 @@ class BirdsData:
         return np.array(labels_ar_list)
 
 
-# bird = BirdsData('ptichki')
-# bird.species_call_distribution()
-# print('hi')
+
+
+
+bird = BirdsData('ptichki')
+print(bird.cor_feat_label())
+
+a = [1,0,0,0,0]
+b = [1,1,1,0]
