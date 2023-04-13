@@ -266,6 +266,7 @@ class BirdsData:
         idcs = np.argsort(cors)
         feat_names = BirdsData(self.project_folder).get_dataframe().columns[0:-1]
         top_10 = feat_names[idcs[538:]]
+        print(top_10[::-1])
         plt.show()
         return top_10[::-1]
 
@@ -281,12 +282,74 @@ class BirdsData:
             labels_ar_list.append(np.load(labels_paths[i]))
         return np.array(labels_ar_list)
 
+    def parallel_coordinates(self):
+        df = BirdsData(self.project_folder).get_dataframe()
+        plt.figure(figsize=(14,10))
+        pd.plotting.parallel_coordinates(df, 'target', axvlines=False)
+        plt.show()
+
+    def feature_distriburutions(self):
+
+        bird = BirdsData('ptichki')
+        df = bird.get_dataframe()
+        df = df.loc[:, df.columns != 'target']
+
+        medians = []
+        for i in range(0, 548):
+            medians.append(np.median(df.iloc[:, i]))
+
+        means = []
+        for i in range(0, 548):
+            means.append(np.mean(df.iloc[:, i]))
+
+        stds = []
+        for i in range(0, 548):
+            stds.append(np.var(df.iloc[:, i]))
+
+
+        fig = plt.figure(figsize=(10, 9))
+
+        fig.add_subplot(3, 1, 1)
+        plt.plot(medians)
+        plt.title('Median of each feature')
+        plt.ylabel('Median')
+
+        fig.add_subplot(3,1,2)
+        plt.plot(means)
+        plt.title('Arithmetic mean each feature')
+        plt.ylabel('Arithmetic mean')
+
+        fig.add_subplot(3,1,3)
+        plt.plot(stds)
+        plt.title('Standard deviation of each feature')
+        plt.ylabel('Standard deviation')
+
+        fig.tight_layout(pad=5.0)
+
+        plt.plot()
+
+        plt.show()
 
 
 
 
 bird = BirdsData('ptichki')
-print(bird.cor_feat_label())
+df = bird.get_dataframe()
+df = df.loc[:, df.columns != 'target']
+def get_redundant_pairs(df):
+    '''Get diagonal and lower triangular pairs of correlation matrix'''
+    pairs_to_drop = set()
+    cols = df.columns
+    for i in range(0, df.shape[1]):
+        for j in range(0, i+1):
+            pairs_to_drop.add((cols[i], cols[j]))
+    return pairs_to_drop
 
-a = [1,0,0,0,0]
-b = [1,1,1,0]
+def get_top_abs_correlations(df, n=5):
+    au_corr = df.corr().abs().unstack()
+    labels_to_drop = get_redundant_pairs(df)
+    au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=True)
+    return au_corr[0:n]
+
+# print(np.std(df.iloc[:, 527]))
+bird.feature_distriburutions()
