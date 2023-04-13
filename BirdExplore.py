@@ -351,5 +351,5 @@ def get_top_abs_correlations(df, n=5):
     au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=True)
     return au_corr[0:n]
 
-# print(np.std(df.iloc[:, 527]))
+
 bird.feature_distriburutions()
